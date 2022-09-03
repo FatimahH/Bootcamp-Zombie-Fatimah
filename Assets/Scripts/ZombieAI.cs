@@ -13,6 +13,8 @@ public class ZombieAI : MonoBehaviour
     [SerializeField] private float maxWanderTime = 10f;
     [SerializeField] private float minRotationDistance = 30f;
     [SerializeField] private float maxRotationDistance = 330f;
+    [SerializeField] private float minDistance = 30f;
+    [SerializeField] private float maxDistance = 330f;
 
     [Header("Zombie Chase Settings")]
     [SerializeField] private float playerStartChaseDistance = 10f;
@@ -157,8 +159,15 @@ public class ZombieAI : MonoBehaviour
         if (!isWandering)
         {
             isWandering = true;
-            transform.Rotate(0f, Random.Range(minRotationDistance, maxRotationDistance), 0f);
-            wanderingCoroutine = StartCoroutine(WalkTime());
+            //transform.Rotate(0f, Random.Range(minRotationDistance, maxRotationDistance), 0f);
+            //wanderingCoroutine = StartCoroutine(WalkTime());
+            float currentX = transform.position.x;
+            float currentZ = transform.position.y;
+            float targetX = currentX + Random.Range(minDistance, maxDistance);
+            float targetZ = currentZ + Random.Range(minDistance, maxDistance);
+
+            float targetY = Terrain.activeTerrain.SampleHeight(new Vector3(targetX, 0f, targetZ));
+            zombieMovement.SetDestination(new Vector3(targetX, targetY, targetZ));
         }
     }
 
@@ -177,11 +186,13 @@ public class ZombieAI : MonoBehaviour
         if (ChasePlayer())
         {
             transform.LookAt(playerTransform);
+            zombieMovement.SetDestination(PlayerPosition);
         }
         else
         {
-            zombieMovement.IsMoving = false;
-            zombieState = ZombieState.Wait;
+            //zombieMovement.IsMoving = false;
+            //zombieState = ZombieState.Wait;
+            zombieMovement.SetDestination(transform.position);
         }
     }
 

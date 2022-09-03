@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ZombieMovement : MonoBehaviour
 {
@@ -13,26 +14,32 @@ public class ZombieMovement : MonoBehaviour
     [SerializeField] private float MoveSpeed = 5f;
 
     //our rigidbody for movement
-    private CharacterController charController;
-
+    //private CharacterController charController;
+    private NavMeshAgent navMeshAgent;
 
     void Start()
     {
-        charController = GetComponent<CharacterController>();
+        //charController = GetComponent<CharacterController>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
-    void Update()
+    //void Update()
+    //{
+    //    //if we're not moving, then exit the update
+    //    if (!IsMoving)
+    //    {
+    //        //exit the Update
+    //        return;
+    //    }
+
+    //    //move the zombie forward in the z axis only
+    //    charController.SimpleMove(transform.TransformDirection(Vector3.forward) * MoveSpeed * Time.deltaTime);
+
+    //}
+
+    public void SetDestination(Vector3 dest)
     {
-        //if we're not moving, then exit the update
-        if (!IsMoving)
-        {
-            //exit the Update
-            return;
-        }
-
-        //move the zombie forward in the z axis only
-        charController.SimpleMove(transform.TransformDirection(Vector3.forward) * MoveSpeed * Time.deltaTime);
-
+        navMeshAgent.SetDestination(dest);
     }
 }
